@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kgc.mapper.DeptMapper">
+
+    <resultMap id="personMap" type="com.kgc.pojo.Person">
+        <!-- preson主键列和实体列的映射-->
+       <result column="id" property="id"></result>
+        <result column="name" property="name"></result>
+        <result column="age" property="age"></result>
+        <result column="address" property="address"></result>
+        <result column="dept_id" property="dept_id"></result>
+        <!-- person类中dept对象属性的映射设置-->
+        <association property="dept" javaType="com.kgc.pojo.Dept">
+            <!--dept主键和实体的映射-->
+            <id column="dept_id" property="id"></id>
+            <result column="dept_name" property="deptname"></result>
+        </association>
+
+
+    </resultMap>
+    <resultMap id="depePresonMap" type="com.kgc.pojo.Dept">
+        <id column="dept_id" property="id"></id>
+        <result column="deptname" property="deptname"></result>
+        <collection property="person" ofType="com.kgc.pojo.Person">
+            <id column="id" property="id"></id>
+            <result column="name" property="name"></result>
+            <result column="age" property="age"></result>
+            <result column="address" property="address"></result>
+            <result column="dept_id" property="dept_id"></result>
+        </collection>
+    </resultMap>
+
+
+
+
+
+    <select id="getAllperson2" resultMap="personMap">
+         SELECT  person.*,dept_name
+        FROM person INNER JOIN dept ON dept.id=person.dept_id
+    </select>
+
+
+
+
+    <select id="getAllperson" resultType="com.kgc.pojo.Person">
+        SELECT  person.*,dept_name
+        FROM person INNER JOIN dept ON dept.id=person.dept_id
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete  from dept where id=#{id}
+    </delete>
+    <update id="update" parameterType="com.kgc.pojo.Dept">
+        update dept set dept_name=#{dept_name} where id=#{id}
+    </update>
+    <insert id="add" parameterType="com.kgc.pojo.Dept">
+        insert into dept (dept_name)values (#{dept_name})
+    </insert>
+</mapper>
